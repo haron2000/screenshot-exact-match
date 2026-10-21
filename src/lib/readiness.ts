@@ -52,11 +52,11 @@ export function overallReadiness(scores: CategoryScore[]): number {
   return Math.round(withData.reduce((sum, s) => sum + s.score, 0) / withData.length);
 }
 
-export function weakest(scores: CategoryScore[]) {
-  return [...scores].sort((a, b) => a.score - b.score)[0];
+export function weakest(scores: CategoryScore[]): CategoryScore {
+  return [...scores].sort((a, b) => a.score - b.score)[0]!;
 }
-export function strongest(scores: CategoryScore[]) {
-  return [...scores].sort((a, b) => b.score - a.score)[0];
+export function strongest(scores: CategoryScore[]): CategoryScore {
+  return [...scores].sort((a, b) => b.score - a.score)[0]!;
 }
 
 /** Questions for the focus category, previously-missed ones first. */
@@ -71,7 +71,7 @@ export function selectFocusedQuestions(category: CategoryId, attempts: Attempt[]
 export function diagnosticQuestions(): Question[] {
   const per = categories.map((c) => questions.filter((q) => categoryOf(q) === c.id).slice(0, 5));
   const out: Question[] = [];
-  for (let i = 0; i < 5; i++) per.forEach((list) => list[i] && out.push(list[i]));
+  for (let i = 0; i < 5; i++) per.forEach((list) => { const q = list[i]; if (q) out.push(q); });
   return out;
 }
 
