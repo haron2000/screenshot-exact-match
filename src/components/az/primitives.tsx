@@ -90,7 +90,7 @@ export function ReadinessRing({
   value: number;
   size?: number;
   /** Overrides the centred percentage, e.g. "—" before any answers exist. */
-  display?: string;
+  display?: string | undefined;
 }) {
   const r = 70;
   const c = 2 * Math.PI * r;
