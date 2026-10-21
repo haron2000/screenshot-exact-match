@@ -137,7 +137,10 @@ function Dashboard() {
           <Stat
             icon={<Flame className="size-4 text-warning" />}
             label="Current streak"
-            value={`${isSample ? 4 : streakDays(attempts)} days`}
+            value={(() => {
+              const n = isSample ? 4 : streakDays(attempts);
+              return `${n} day${n === 1 ? "" : "s"}`;
+            })()}
           />
         </div>
       </div>
