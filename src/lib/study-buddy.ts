@@ -2,7 +2,7 @@
 const replies: { match: RegExp; text: string }[] = [
   {
     match: /policy/i,
-    text: "Azure Policy is a rulebook for your cloud.\n\nYou write rules like \"resources may only be created in West Europe\" or \"every resource must have a CostCenter tag\". Azure then checks resources against those rules and can block anything that breaks them.\n\nTip: Advisor suggests, Policy enforces.",
+    text: 'Azure Policy is a rulebook for your cloud.\n\nYou write rules like "resources may only be created in West Europe" or "every resource must have a CostCenter tag". Azure then checks resources against those rules and can block anything that breaks them.\n\nTip: Advisor suggests, Policy enforces.',
   },
   {
     match: /iaas|paas|saas/i,

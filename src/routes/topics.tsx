@@ -10,9 +10,16 @@ export const Route = createFileRoute("/topics")({
   head: () => ({
     meta: [
       { title: "Topics — AZ-Ready" },
-      { name: "description", content: "Explore AZ-900 learning topics: cloud concepts, Azure architecture and services, and management and governance." },
+      {
+        name: "description",
+        content:
+          "Explore AZ-900 learning topics: cloud concepts, Azure architecture and services, and management and governance.",
+      },
       { property: "og:title", content: "Topics — AZ-Ready" },
-      { property: "og:description", content: "Browse the AZ-900 learning areas and their subtopics." },
+      {
+        property: "og:description",
+        content: "Browse the AZ-900 learning areas and their subtopics.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -31,7 +38,8 @@ function Topics() {
     <PageShell>
       <h1 className="text-3xl font-bold sm:text-4xl">Topic explorer</h1>
       <p className="mt-2 max-w-2xl text-muted-foreground">
-        Learning topics based on the public AZ-900 skills outline. These are study areas, not claims about exact exam questions.
+        Learning topics based on the public AZ-900 skills outline. These are study areas, not claims
+        about exact exam questions.
       </p>
       <div className="mt-8 grid gap-4 lg:grid-cols-3">
         {categories.map((c) => {
@@ -40,7 +48,9 @@ function Topics() {
           return (
             <Card key={c.id} className="flex flex-col">
               <div className="flex items-center gap-3">
-                <span className="grid size-10 place-items-center rounded-xl bg-primary/15 text-primary">{icons[c.id]}</span>
+                <span className="grid size-10 place-items-center rounded-xl bg-primary/15 text-primary">
+                  {icons[c.id]}
+                </span>
                 <div>
                   <h2 className="font-semibold leading-tight">{c.name}</h2>
                   <p className="text-xs text-muted-foreground">{count} practice questions</p>
@@ -60,7 +70,9 @@ function Topics() {
         })}
       </div>
       <div className="mt-8 text-center">
-        <Button asChild variant="hero" size="lg"><Link to="/diagnostic">Test yourself on all topics</Link></Button>
+        <Button asChild variant="hero" size="lg">
+          <Link to="/diagnostic">Test yourself on all topics</Link>
+        </Button>
       </div>
     </PageShell>
   );

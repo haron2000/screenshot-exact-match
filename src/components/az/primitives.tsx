@@ -4,7 +4,11 @@ import { getPriority, type Priority } from "@/lib/readiness";
 
 export function Card({ className, children }: { className?: string; children: ReactNode }) {
   return (
-    <div className={cn("rounded-2xl border border-border bg-card p-5 shadow-card sm:p-6", className)}>{children}</div>
+    <div
+      className={cn("rounded-2xl border border-border bg-card p-5 shadow-card sm:p-6", className)}
+    >
+      {children}
+    </div>
   );
 }
 
@@ -24,11 +28,29 @@ export const toneText: Record<Priority, string> = {
   "Focus Area": "text-destructive",
 };
 
-export function ProgressBar({ value, tone, label }: { value: number; tone?: Priority | "brand"; label: string }) {
+export function ProgressBar({
+  value,
+  tone,
+  label,
+}: {
+  value: number;
+  tone?: Priority | "brand";
+  label: string;
+}) {
   const fill = !tone || tone === "brand" ? "bg-brand" : toneBar[tone];
   return (
-    <div role="progressbar" aria-label={label} aria-valuenow={value} aria-valuemin={0} aria-valuemax={100} className="h-2 w-full overflow-hidden rounded-full bg-muted">
-      <div className={cn("h-full rounded-full transition-[width] duration-700 ease-out", fill)} style={{ width: `${Math.max(0, Math.min(100, value))}%` }} />
+    <div
+      role="progressbar"
+      aria-label={label}
+      aria-valuenow={value}
+      aria-valuemin={0}
+      aria-valuemax={100}
+      className="h-2 w-full overflow-hidden rounded-full bg-muted"
+    >
+      <div
+        className={cn("h-full rounded-full transition-[width] duration-700 ease-out", fill)}
+        style={{ width: `${Math.max(0, Math.min(100, value))}%` }}
+      />
     </div>
   );
 }
@@ -36,13 +58,25 @@ export function ProgressBar({ value, tone, label }: { value: number; tone?: Prio
 export function PriorityBadge({ score }: { score: number }) {
   const p = getPriority(score);
   return (
-    <span className={cn("inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium", toneBadge[p])}>{p}</span>
+    <span
+      className={cn(
+        "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium",
+        toneBadge[p],
+      )}
+    >
+      {p}
+    </span>
   );
 }
 
 export function Pill({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <span className={cn("inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary px-3 py-1 text-xs font-medium text-muted-foreground", className)}>
+    <span
+      className={cn(
+        "inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary px-3 py-1 text-xs font-medium text-muted-foreground",
+        className,
+      )}
+    >
       {children}
     </span>
   );
@@ -61,7 +95,18 @@ export function ReadinessRing({ value, size = 168 }: { value: number; size?: num
           </linearGradient>
         </defs>
         <circle cx="80" cy="80" r={r} fill="none" stroke="var(--muted)" strokeWidth="12" />
-        <circle cx="80" cy="80" r={r} fill="none" stroke="url(#ring)" strokeWidth="12" strokeLinecap="round" strokeDasharray={c} strokeDashoffset={c - (c * value) / 100} className="transition-all duration-1000" />
+        <circle
+          cx="80"
+          cy="80"
+          r={r}
+          fill="none"
+          stroke="url(#ring)"
+          strokeWidth="12"
+          strokeLinecap="round"
+          strokeDasharray={c}
+          strokeDashoffset={c - (c * value) / 100}
+          className="transition-all duration-1000"
+        />
       </svg>
       <div className="absolute inset-0 grid place-items-center">
         <span className="font-display text-4xl font-bold">{value}%</span>

@@ -18,15 +18,33 @@ describe("scoring", () => {
   it("uses the latest attempt per question", () => {
     const t = new Date().toISOString();
     const s = scoreByCategory([
-      { questionId: "q-mg-1", selectedAnswer: "a", isCorrect: false, createdAt: t, mode: "diagnostic" },
-      { questionId: "q-mg-1", selectedAnswer: "b", isCorrect: true, createdAt: t, mode: "practice" },
+      {
+        questionId: "q-mg-1",
+        selectedAnswer: "a",
+        isCorrect: false,
+        createdAt: t,
+        mode: "diagnostic",
+      },
+      {
+        questionId: "q-mg-1",
+        selectedAnswer: "b",
+        isCorrect: true,
+        createdAt: t,
+        mode: "practice",
+      },
     ]);
     expect(s.find((c) => c.id === "governance")?.score).toBe(100);
   });
   it("focused practice puts missed questions first", () => {
     const t = new Date().toISOString();
     const list = selectFocusedQuestions("governance", [
-      { questionId: "q-mg-4", selectedAnswer: "b", isCorrect: false, createdAt: t, mode: "diagnostic" },
+      {
+        questionId: "q-mg-4",
+        selectedAnswer: "b",
+        isCorrect: false,
+        createdAt: t,
+        mode: "diagnostic",
+      },
     ]);
     expect(list[0]?.id).toBe("q-mg-4");
   });
