@@ -82,7 +82,16 @@ export function Pill({ children, className }: { children: ReactNode; className?:
   );
 }
 
-export function ReadinessRing({ value, size = 168 }: { value: number; size?: number }) {
+export function ReadinessRing({
+  value,
+  size = 168,
+  display,
+}: {
+  value: number;
+  size?: number;
+  /** Overrides the centred percentage, e.g. "—" before any answers exist. */
+  display?: string;
+}) {
   const r = 70;
   const c = 2 * Math.PI * r;
   return (
@@ -109,7 +118,7 @@ export function ReadinessRing({ value, size = 168 }: { value: number; size?: num
         />
       </svg>
       <div className="absolute inset-0 grid place-items-center">
-        <span className="font-display text-4xl font-bold">{value}%</span>
+        <span className="font-display text-4xl font-bold">{display ?? `${value}%`}</span>
       </div>
     </div>
   );

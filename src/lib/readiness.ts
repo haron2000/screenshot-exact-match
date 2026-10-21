@@ -25,6 +25,8 @@ export interface CategoryScore {
   name: string;
   score: number;
   answered: number;
+  /** Questions whose latest attempt was wrong. */
+  missed: number;
 }
 
 /** Uses the latest attempt per question so improvement is reflected. */
@@ -41,6 +43,7 @@ export function scoreByCategory(attempts: Attempt[]): CategoryScore[] {
       id: c.id,
       name: c.name,
       answered: list.length,
+      missed: list.length - correct,
       score: list.length ? Math.round((correct / list.length) * 100) : 0,
     };
   });
