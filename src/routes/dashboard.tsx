@@ -9,18 +9,20 @@ import {
   Activity,
 } from "lucide-react";
 import { PageShell } from "@/components/az/PageShell";
-import { Card, ReadinessRing } from "@/components/az/primitives";
+import { Card, ReadinessRing, toneText } from "@/components/az/primitives";
 import { TopicScoreCard } from "@/components/az/TopicScoreCard";
 import { Button } from "@/components/ui/button";
 import { useProgress } from "@/hooks/use-progress";
 import { getQuestion } from "@/data/questions";
 import {
+  getPriority,
   overallReadiness,
   scoreByCategory,
   streakDays,
   weakest,
   type CategoryScore,
 } from "@/lib/readiness";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
@@ -42,17 +44,20 @@ export const Route = createFileRoute("/dashboard")({
   component: Dashboard,
 });
 
-const sampleScores: CategoryScore[] = [
-  { id: "cloud", name: "Cloud Concepts", score: 84, answered: 12 },
-  { id: "architecture", name: "Azure Architecture & Services", score: 72, answered: 14 },
-  { id: "governance", name: "Azure Management & Governance", score: 58, answered: 10 },
-];
+/** Why the weakest area is the one worth working on first. */
+function focusMessage(focus: CategoryScore): string {
+  if (focus.answered === 0)
+    return `You haven't answered any questions in ${focus.name} yet — the diagnostic covers all three areas.`;
+  if (focus.missed === 0)
+    return `You haven't missed a question in ${focus.name} yet. Keep practising to hold this level.`;
+  return `You missed ${focus.missed} of the ${focus.answered} questions you answered in ${focus.name}, leaving your score at ${focus.score}% — your lowest of the three areas.`;
+}
 
 function Dashboard() {
   const { attempts, ready, reset } = useProgress();
-  const isSample = ready && attempts.length === 0;
-  const scores = isSample ? sampleScores : scoreByCategory(attempts);
-  const readiness = isSample ? 71 : overallReadiness(scores);
+  const hasData = attempts.length > 0;
+  const scores = scoreByCategory(attempts);
+  const readiness = overallReadiness(scores);
   const focus = weakest(scores);
   const correct = attempts.filter((a) => a.isCorrect).length;
   const accuracy = attempts.length ? Math.round((correct / attempts.length) * 100) : 0;
@@ -77,15 +82,9 @@ function Dashboard() {
           <h1 className="text-3xl font-bold sm:text-4xl">Welcome back 👋</h1>
           <p className="mt-1 text-muted-foreground">Here's where your AZ-900 preparation stands.</p>
         </div>
-        {isSample ? (
-          <p className="rounded-lg border border-warning/30 bg-warning/10 px-3 py-2 text-xs text-warning">
-            Showing sample data — take the diagnostic to see your own.
-          </p>
-        ) : (
-          <Button variant="ghost" size="sm" onClick={reset}>
-            Reset my progress
-          </Button>
-        )}
+        <Button variant="ghost" size="sm" onClick={reset}>
+          Reset my progress
+        </Button>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-3">
@@ -93,12 +92,14 @@ function Dashboard() {
           <p className="text-sm font-medium uppercase tracking-wider text-muted-foreground">
             Exam Readiness
           </p>
-          <ReadinessRing value={readiness} />
+          <ReadinessRing value={readiness} display={hasData ? undefined : "—"} />
           <p className="max-w-xs text-sm text-muted-foreground">
-            Average across the three AZ-900 learning areas.
+            {hasData
+              ? "Average across the three AZ-900 learning areas."
+              : "Complete the diagnostic to discover your current level."}
           </p>
           <Button asChild variant="glass" className="w-full">
-            <Link to="/diagnostic">{isSample ? "Start Diagnostic" : "Retake Diagnostic"}</Link>
+            <Link to="/diagnostic">{hasData ? "Retake Diagnostic" : "Start Diagnostic"}</Link>
           </Button>
         </Card>
 
@@ -108,37 +109,55 @@ function Dashboard() {
             className="absolute -right-16 -top-16 size-48 rounded-full bg-warning/10 blur-2xl"
           />
           <p className="flex items-center gap-2 text-sm font-semibold text-warning">
-            <AlertTriangle className="size-4" /> Your Focus Area
+            <AlertTriangle className="size-4" /> Your biggest opportunity
           </p>
-          <h2 className="mt-3 text-2xl font-bold sm:text-3xl">
-            {focus.name.replace("Azure ", "")}
-          </h2>
-          <p className="mt-2 max-w-lg text-muted-foreground">
-            Your recent performance suggests this is the area that needs the most attention.
-          </p>
-          <Button asChild variant="hero" className="mt-5">
-            <Link to="/practice">
-              Practice Weak Area <ArrowRight />
-            </Link>
-          </Button>
+          {hasData ? (
+            <>
+              <h2 className="mt-3 flex flex-wrap items-baseline gap-x-3 text-2xl font-bold sm:text-3xl">
+                {focus.name.replace("Azure ", "")}
+                <span className={cn("font-display", toneText[getPriority(focus.score)])}>
+                  {focus.score}%
+                </span>
+              </h2>
+              <p className="mt-2 max-w-lg text-muted-foreground">{focusMessage(focus)}</p>
+            </>
+          ) : (
+            <p className="mt-3 max-w-lg text-muted-foreground">
+              Your weakest area will appear here once you've finished the diagnostic.
+            </p>
+          )}
+          {hasData ? (
+            <Button asChild variant="hero" className="mt-5">
+              <Link to="/practice">
+                Practice Weak Area <ArrowRight />
+              </Link>
+            </Button>
+          ) : (
+            <Button asChild variant="hero" className="mt-5">
+              <Link to="/diagnostic">
+                Start Diagnostic <ArrowRight />
+              </Link>
+            </Button>
+          )}
         </Card>
 
         <div className="grid gap-4 sm:grid-cols-3 lg:col-span-2">
           <Stat
             icon={<Target className="size-4 text-primary" />}
             label="Questions answered"
-            value={isSample ? "36" : String(attempts.length)}
+            value={hasData ? String(attempts.length) : "—"}
           />
           <Stat
             icon={<Activity className="size-4 text-cyan" />}
             label="Accuracy"
-            value={isSample ? "71%" : `${accuracy}%`}
+            value={hasData ? `${accuracy}%` : "—"}
           />
           <Stat
             icon={<Flame className="size-4 text-warning" />}
             label="Current streak"
             value={(() => {
-              const n = isSample ? 4 : streakDays(attempts);
+              if (!hasData) return "—";
+              const n = streakDays(attempts);
               return `${n} day${n === 1 ? "" : "s"}`;
             })()}
           />

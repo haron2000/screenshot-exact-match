@@ -12,16 +12,30 @@ export function TopicScoreCard({
   answered: number;
 }) {
   const p = getPriority(score);
+  const hasData = answered > 0;
   return (
     <Card className="flex flex-col gap-4">
       <div className="flex items-start justify-between gap-3">
         <h3 className="text-base font-semibold leading-snug">{name}</h3>
-        <PriorityBadge score={score} />
+        {hasData ? (
+          <PriorityBadge score={score} />
+        ) : (
+          <span className="text-xs text-muted-foreground">Not started</span>
+        )}
       </div>
-      <p className={cn("font-display text-3xl font-bold", toneText[p])}>{score}%</p>
-      <ProgressBar value={score} tone={p} label={`${name} score`} />
+      <p
+        className={cn(
+          "font-display text-3xl font-bold",
+          hasData ? toneText[p] : "text-muted-foreground",
+        )}
+      >
+        {hasData ? `${score}%` : "—"}
+      </p>
+      <ProgressBar value={hasData ? score : 0} tone={p} label={`${name} score`} />
       <p className="text-xs text-muted-foreground">
-        {answered} question{answered === 1 ? "" : "s"} answered
+        {hasData
+          ? `${answered} question${answered === 1 ? "" : "s"} answered`
+          : "No questions answered yet"}
       </p>
     </Card>
   );
