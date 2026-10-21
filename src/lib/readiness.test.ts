@@ -28,6 +28,6 @@ describe("scoring", () => {
     const list = selectFocusedQuestions("governance", [
       { questionId: "q-mg-4", selectedAnswer: "b", isCorrect: false, createdAt: t, mode: "diagnostic" },
     ]);
-    expect(list[0].id).toBe("q-mg-4");
+    expect(list[0]?.id).toBe("q-mg-4");
   });
 });
