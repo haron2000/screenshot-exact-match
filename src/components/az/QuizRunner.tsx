@@ -15,7 +15,11 @@ interface Props {
 }
 
 const keys: AnswerKey[] = ["a", "b", "c", "d"];
-const diffTone = { Easy: "text-success", Medium: "text-warning", Hard: "text-destructive" } as const;
+const diffTone = {
+  Easy: "text-success",
+  Medium: "text-warning",
+  Hard: "text-destructive",
+} as const;
 
 export function QuizRunner({ questions, label, onAnswer, onComplete }: Props) {
   const [index, setIndex] = useState(0);
@@ -48,9 +52,14 @@ export function QuizRunner({ questions, label, onAnswer, onComplete }: Props) {
           <span className="font-medium">
             {label} {index + 1} of {questions.length}
           </span>
-          <span className="text-muted-foreground">{Math.round(((index + (submitted ? 1 : 0)) / questions.length) * 100)}%</span>
+          <span className="text-muted-foreground">
+            {Math.round(((index + (submitted ? 1 : 0)) / questions.length) * 100)}%
+          </span>
         </div>
-        <ProgressBar value={((index + (submitted ? 1 : 0)) / questions.length) * 100} label="Quiz progress" />
+        <ProgressBar
+          value={((index + (submitted ? 1 : 0)) / questions.length) * 100}
+          label="Quiz progress"
+        />
       </div>
 
       <Card className="space-y-6">
@@ -86,7 +95,9 @@ export function QuizRunner({ questions, label, onAnswer, onComplete }: Props) {
                 <span
                   className={cn(
                     "grid size-8 shrink-0 place-items-center rounded-lg border text-sm font-semibold uppercase",
-                    isSel && !submitted ? "border-primary bg-primary text-primary-foreground" : "border-border text-muted-foreground",
+                    isSel && !submitted
+                      ? "border-primary bg-primary text-primary-foreground"
+                      : "border-border text-muted-foreground",
                     showCorrect && "border-success bg-success text-success-foreground",
                     showWrong && "border-destructive bg-destructive text-destructive-foreground",
                   )}

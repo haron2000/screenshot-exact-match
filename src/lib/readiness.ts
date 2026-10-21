@@ -71,7 +71,11 @@ export function selectFocusedQuestions(category: CategoryId, attempts: Attempt[]
 export function diagnosticQuestions(): Question[] {
   const per = categories.map((c) => questions.filter((q) => categoryOf(q) === c.id).slice(0, 5));
   const out: Question[] = [];
-  for (let i = 0; i < 5; i++) per.forEach((list) => { const q = list[i]; if (q) out.push(q); });
+  for (let i = 0; i < 5; i++)
+    per.forEach((list) => {
+      const q = list[i];
+      if (q) out.push(q);
+    });
   return out;
 }
 

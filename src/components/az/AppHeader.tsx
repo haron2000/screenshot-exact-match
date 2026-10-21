@@ -33,7 +33,10 @@ export function AppHeader() {
             <p className="text-sm font-medium leading-tight">Guest learner</p>
             <p className="text-xs text-muted-foreground">Progress saved on this device</p>
           </div>
-          <div aria-hidden className="grid size-9 place-items-center rounded-full bg-brand text-sm font-semibold text-primary-foreground">
+          <div
+            aria-hidden
+            className="grid size-9 place-items-center rounded-full bg-brand text-sm font-semibold text-primary-foreground"
+          >
             G
           </div>
           <button
