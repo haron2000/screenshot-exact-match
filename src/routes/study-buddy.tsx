@@ -37,7 +37,9 @@ function StudyBuddy() {
   const [thinking, setThinking] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => endRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" }), [messages, thinking]);
+  useEffect(() => {
+    endRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }, [messages, thinking]);
 
   const send = (text: string) => {
     const t = text.trim();
