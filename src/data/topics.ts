@@ -143,6 +143,34 @@ export const topics: Topic[] = [
     category: "governance",
     description: "Track spending, set budgets and estimate costs.",
   },
+    {
+    id: "identity-security",
+    name: "Identity and security",
+    category: "architecture",
+    description:
+      "Identity, authentication and security concepts used to protect Azure resources.",
+  },
+  {
+    id: "resource-organization",
+    name: "Resource organization",
+    category: "governance",
+    description:
+      "Resource groups and other ways to organise Azure resources for management.",
+  },
+  {
+    id: "azure-rbac",
+    name: "Azure RBAC",
+    category: "governance",
+    description:
+      "Control who can access Azure resources and what actions they can perform.",
+  },
+  {
+    id: "azure-management",
+    name: "Azure management tools",
+    category: "governance",
+    description:
+      "Tools and approaches for managing Azure resources, including Cloud Shell and infrastructure as code.",
+  },
 ];
 
 export const getCategory = (id: CategoryId) => categories.find((c) => c.id === id)!;

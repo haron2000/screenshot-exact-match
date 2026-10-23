@@ -386,6 +386,214 @@ export const questions: Question[] = [
       "Locks protect existing resources from change; they can't require tags on new ones.",
     difficulty: "Hard",
   },
+    // ---------- Additional Cloud Concepts ----------
+
+  {
+    id: "q-cc-8",
+    topicId: "cloud-benefits",
+    question:
+      "A critical application must remain accessible even when one component fails. Which cloud concept describes designing for minimal downtime?",
+    options: {
+      a: "High availability",
+      b: "Consumption-based pricing",
+      c: "Resource tagging",
+      d: "Vertical scaling",
+    },
+    correctAnswer: "a",
+    explanation:
+      "High availability aims to keep services accessible with minimal downtime, often through redundancy and resilient architecture.",
+    keyConcept:
+      "High availability focuses on keeping a service running and accessible.",
+    commonMisconception:
+      "Scalability handles changing demand; high availability focuses on service continuity.",
+    difficulty: "Medium",
+  },
+  {
+    id: "q-cc-9",
+    topicId: "cloud-migration",
+    question:
+      "A company wants its cloud costs to increase or decrease according to the resources it consumes. Which pricing approach supports this?",
+    options: {
+      a: "A fixed hardware purchase",
+      b: "Consumption-based pricing",
+      c: "A mandatory annual hardware replacement",
+      d: "A one-time datacenter construction fee",
+    },
+    correctAnswer: "b",
+    explanation:
+      "Consumption-based pricing charges customers according to their use of cloud services, subject to the service's pricing terms.",
+    keyConcept:
+      "Consumption-based pricing links charges to resource usage.",
+    commonMisconception:
+      "Cloud services are not necessarily free when idle; some resources incur charges while provisioned.",
+    difficulty: "Easy",
+  },
+  {
+    id: "q-cc-10",
+    topicId: "service-models",
+    question:
+      "A business uses a provider's finished email application through a web browser. The business does not manage the underlying servers or application platform. Which service model is this?",
+    options: {
+      a: "IaaS",
+      b: "PaaS",
+      c: "SaaS",
+      d: "On-premises infrastructure",
+    },
+    correctAnswer: "c",
+    explanation:
+      "Software as a Service provides a ready-to-use application managed by the service provider.",
+    keyConcept:
+      "SaaS means using a complete application without managing its underlying platform.",
+    commonMisconception:
+      "PaaS provides a platform for deploying applications; SaaS provides the finished application itself.",
+    difficulty: "Easy",
+  },
+
+  // ---------- Additional Architecture & Services ----------
+
+  {
+    id: "q-ar-8",
+    topicId: "identity-security",
+    question:
+      "An organisation wants employees to sign in once and access several supported applications without signing in separately to each one. Which capability meets this need?",
+    options: {
+      a: "Single sign-on (SSO)",
+      b: "Resource locking",
+      c: "Storage replication",
+      d: "Network peering",
+    },
+    correctAnswer: "a",
+    explanation:
+      "Single sign-on allows users to authenticate once and access multiple supported applications according to configured access policies.",
+    keyConcept:
+      "SSO reduces repeated sign-ins across supported applications.",
+    commonMisconception:
+      "SSO simplifies authentication but does not automatically grant every user access to every application.",
+    difficulty: "Medium",
+  },
+  {
+    id: "q-ar-9",
+    topicId: "identity-security",
+    question:
+      "Which security measure requires a user to provide two or more different types of evidence to verify their identity?",
+    options: {
+      a: "A longer username",
+      b: "Multifactor authentication (MFA)",
+      c: "A resource group",
+      d: "A public IP address",
+    },
+    correctAnswer: "b",
+    explanation:
+      "MFA requires multiple authentication factors, such as something you know and something you have.",
+    keyConcept:
+      "Authentication factors include something you know, have, or are.",
+    commonMisconception:
+      "Two passwords are not two different factor types; MFA uses distinct categories of evidence.",
+    difficulty: "Easy",
+  },
+  {
+    id: "q-ar-10",
+    topicId: "resource-organization",
+    question:
+      "An administrator wants to group related Azure resources so they can be deployed, managed, and monitored together. Which Azure construct should they use?",
+    options: {
+      a: "Availability zone",
+      b: "Resource group",
+      c: "Region pair",
+      d: "Virtual network peering",
+    },
+    correctAnswer: "b",
+    explanation:
+      "A resource group is a logical container for Azure resources that are managed as a group.",
+    keyConcept:
+      "Resource groups organise related resources; they do not provide physical resilience.",
+    commonMisconception:
+      "A resource group is a management boundary, not a separate datacenter or availability zone.",
+    difficulty: "Easy",
+  },
+  {
+    id: "q-ar-11",
+    topicId: "storage",
+    question:
+      "A company wants Azure Storage data to have copies in separate locations within the primary region to improve resilience against a local facility failure. Which redundancy option is designed for this?",
+    options: {
+      a: "Locally redundant storage (LRS)",
+      b: "Zone-redundant storage (ZRS)",
+      c: "A storage access tier",
+      d: "A resource lock",
+    },
+    correctAnswer: "b",
+    explanation:
+      "Zone-redundant storage synchronously replicates data across availability zones in the primary region where supported.",
+    keyConcept:
+      "ZRS distributes copies across availability zones within a region.",
+    commonMisconception:
+      "LRS keeps copies within a single physical location; ZRS provides zone-level distribution.",
+    difficulty: "Hard",
+  },
+
+  // ---------- Additional Management & Governance ----------
+
+  {
+    id: "q-mg-8",
+    topicId: "azure-rbac",
+    question:
+      "A team lead needs to let a colleague manage virtual machines but not grant them unrestricted control over the subscription. Which Azure feature is used to assign appropriate permissions?",
+    options: {
+      a: "Azure RBAC",
+      b: "Azure Advisor",
+      c: "Cost Management budgets",
+      d: "Availability sets",
+    },
+    correctAnswer: "a",
+    explanation:
+      "Azure role-based access control assigns permissions to users, groups, or other identities at a defined scope.",
+    keyConcept:
+      "RBAC controls who can perform which actions at a given scope.",
+    commonMisconception:
+      "Azure Policy governs resource configuration; RBAC governs access permissions.",
+    difficulty: "Medium",
+  },
+  {
+    id: "q-mg-9",
+    topicId: "azure-management",
+    question:
+      "An administrator wants to run Azure CLI commands from a browser without manually installing the CLI on their computer. Which tool is designed for this?",
+    options: {
+      a: "Azure Cloud Shell",
+      b: "Azure Advisor",
+      c: "Azure Service Health",
+      d: "Azure Cost Management",
+    },
+    correctAnswer: "a",
+    explanation:
+      "Azure Cloud Shell provides a browser-accessible shell environment with Azure command-line tools available.",
+    keyConcept:
+      "Cloud Shell provides a browser-based command-line environment for managing Azure.",
+    commonMisconception:
+      "The Azure portal provides a graphical interface; Cloud Shell lets you execute commands.",
+    difficulty: "Easy",
+  },
+  {
+    id: "q-mg-10",
+    topicId: "azure-management",
+    question:
+      "A team wants to define its cloud infrastructure in version-controlled configuration files so environments can be deployed consistently. Which approach best fits?",
+    options: {
+      a: "Manual configuration of each resource",
+      b: "Infrastructure as code (IaC)",
+      c: "A ReadOnly resource lock",
+      d: "A cost alert",
+    },
+    correctAnswer: "b",
+    explanation:
+      "Infrastructure as code describes infrastructure in files that can be version-controlled, reviewed, and used to deploy consistent environments.",
+    keyConcept:
+      "IaC makes infrastructure definitions repeatable and reviewable.",
+    commonMisconception:
+      "A resource lock protects a resource; it does not define or deploy infrastructure.",
+    difficulty: "Medium",
+  },
 ];
 
 export const getQuestion = (id: string) => questions.find((q) => q.id === id);

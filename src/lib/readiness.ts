@@ -1,6 +1,5 @@
 import { questions, type Question } from "@/data/questions";
-import { categories, getTopic, type CategoryId } from "@/data/topics";
-
+import { categories, topics, getTopic, type CategoryId } from "@/data/topics";
 export type Priority = "Strong" | "Needs Practice" | "Focus Area";
 
 export interface Attempt {
@@ -49,6 +48,46 @@ export function scoreByCategory(attempts: Attempt[]): CategoryScore[] {
   });
 }
 
+export interface TopicScore {
+  id: string;
+  name: string;
+  category: CategoryId;
+  score: number;
+  answered: number;
+  missed: number;
+}
+
+/**
+ * Scores individual topics using the latest attempt per question.
+ * Unanswered topics have a score of zero but should not be treated
+ * as demonstrated weaknesses.
+ */
+export function scoreByTopic(attempts: Attempt[]): TopicScore[] {
+  const latest = new Map<string, Attempt>();
+
+  for (const attempt of attempts) {
+    latest.set(attempt.questionId, attempt);
+  }
+
+  return topics.map((topic) => {
+    const topicAttempts = [...latest.values()].filter((attempt) => {
+      const question = questions.find((item) => item.id === attempt.questionId);
+
+      return question?.topicId === topic.id;
+    });
+
+    const correct = topicAttempts.filter((attempt) => attempt.isCorrect).length;
+
+    return {
+      id: topic.id,
+      name: topic.name,
+      category: topic.category,
+      answered: topicAttempts.length,
+      missed: topicAttempts.length - correct,
+      score: topicAttempts.length ? Math.round((correct / topicAttempts.length) * 100) : 0,
+    };
+  });
+}
 export function overallReadiness(scores: CategoryScore[]): number {
   const withData = scores.filter((s) => s.answered > 0);
   if (!withData.length) return 0;
@@ -80,6 +119,17 @@ export function diagnosticQuestions(): Question[] {
       if (q) out.push(q);
     });
   return out;
+}
+
+/** Select questions for one topic, prioritising previously missed questions. */
+export function selectTopicQuestions(topicId: string, attempts: Attempt[]): Question[] {
+  const missed = new Set(
+    attempts.filter((attempt) => !attempt.isCorrect).map((attempt) => attempt.questionId),
+  );
+
+  return questions
+    .filter((question) => question.topicId === topicId)
+    .sort((a, b) => Number(missed.has(b.id)) - Number(missed.has(a.id)));
 }
 
 export function streakDays(attempts: Attempt[], today = new Date()): number {

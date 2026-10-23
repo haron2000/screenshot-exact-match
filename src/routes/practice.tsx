@@ -7,10 +7,18 @@ import { Card } from "@/components/az/primitives";
 import { Button } from "@/components/ui/button";
 import { useProgress } from "@/hooks/use-progress";
 import type { Question } from "@/data/questions";
-import { getCategory, type CategoryId } from "@/data/topics";
-import { scoreByCategory, selectFocusedQuestions, weakest } from "@/lib/readiness";
+import { getCategory, getTopic, type CategoryId } from "@/data/topics";
 
+import {
+  scoreByCategory,
+  selectFocusedQuestions,
+  selectTopicQuestions,
+  weakest,
+} from "@/lib/readiness";
 export const Route = createFileRoute("/practice")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    topic: typeof search.topic === "string" ? search.topic : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Focused Practice — AZ-Ready" },
@@ -28,9 +36,11 @@ export const Route = createFileRoute("/practice")({
 });
 
 function Practice() {
+  const { topic: requestedTopic } = Route.useSearch();
   const { attempts, ready, record } = useProgress();
   const [session, setSession] = useState<{
     category: CategoryId;
+    topic: string;
     questions: Question[];
     missed: number;
   } | null>(null);
@@ -63,19 +73,32 @@ function Practice() {
   const active =
     session ??
     (() => {
-      const focus = weakest(scoreByCategory(attempts)).id;
-      const qs = selectFocusedQuestions(focus, attempts);
+      const requested = requestedTopic ? getTopic(requestedTopic) : undefined;
+
+      // Ignore unknown topic IDs and fall back to category-focused practice.
+      const topicId = requested?.id;
+
+      const focus = topicId ? requested.category : weakest(scoreByCategory(attempts)).id;
+
+      const qs = topicId
+        ? selectTopicQuestions(topicId, attempts)
+        : selectFocusedQuestions(focus, attempts);
+
       const missedIds = new Set(attempts.filter((a) => !a.isCorrect).map((a) => a.questionId));
+
       const s = {
         category: focus,
+        topicId,
         questions: qs,
         missed: qs.filter((q) => missedIds.has(q.id)).length,
       };
+
       queueMicrotask(() => setSession(s));
       return s;
     })();
 
   const cat = getCategory(active.category);
+  const topic = active.topicId ? getTopic(active.topicId) : undefined;
 
   if (done) {
     return (
@@ -113,11 +136,15 @@ function Practice() {
         <div className="space-y-1 text-sm">
           <p>
             <span className="text-muted-foreground">Focus topic:</span>{" "}
-            <span className="font-semibold">{cat.shortName}</span>
+            <span className="font-semibold">{topic ? topic.name : cat.shortName}</span>{" "}
           </p>
           <p>
-            <span className="text-muted-foreground">Reason:</span> You've recently struggled with
-            questions in this area.
+            <p>
+              <span className="text-muted-foreground">Reason:</span>{" "}
+              {topic
+                ? `This session focuses specifically on ${topic.name}.`
+                : "You've recently struggled with questions in this learning area."}
+            </p>
           </p>
           {active.missed > 0 && (
             <p className="text-muted-foreground">
@@ -128,7 +155,7 @@ function Practice() {
         </div>
       </Card>
       <QuizRunner
-        key={active.category}
+        key={active.topicId ?? active.category}
         questions={active.questions}
         label="Focused question"
         onAnswer={(q, sel, ok) =>
